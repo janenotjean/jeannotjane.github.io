@@ -63,19 +63,19 @@
       Consider following us on our social media accounts for exclusive content!
     </p>
 
-    <a id="claimBtn" class="btn owner" target="_blank">
+    <a id="claimBtn" class="btn owner">
       <i class="fa-solid fa-user-check"></i> Claim This Tag
     </a>
 
-    <a id="foundBtn" class="btn finder" target="_blank">
+    <a class="btn finder">
       <i class="fa-solid fa-hand-holding-heart"></i> I Found This Item
     </a>
 
-    <a href="YOUR_INSTAGRAM_LINK_HERE" class="btn instagram">
+    <a href="https://www.instagram.com/janeisback2me?igsh=MWNkdTN4NHV0enM2&utm_source=qr" class="btn instagram">
       <i class="fab fa-instagram"></i> Back2Me Instagram
     </a>
 
-    <a href="YOUR_TIKTOK_LINK_HERE" class="btn tiktok">
+    <a href="https://www.tiktok.com/@janeisback2me" class="btn tiktok">
       <i class="fab fa-tiktok"></i> Back2Me TikTok
     </a>
 
@@ -83,29 +83,28 @@
   </div>
 
   <script>
-    // Read the item ID from the URL parameter
-    const params = new URLSearchParams(window.location.search);
-    const itemId = params.get("item");
+    const claimBtn = document.getElementById("claimBtn");
+    const API_URL = "https://script.google.com/macros/s/AKfycbw_z8e_5yrREkzPETJTmvV1RXQwr990gOwiC5hZ08fa3CnYFzvGDSj7OgL5niFMMzelYA/exec";
 
-    if (!itemId) {
-      alert("Invalid QR Code. No item ID found.");
-      document.body.innerHTML = "";
-    } else {
-      // Replace these with your actual Google Form URLs
-      const ownerFormURL = "https://docs.google.com/forms/d/1Wdz11hEoDH8e8Jypnjx4sfVJnRO_gapdmukJLKwWF04/edit#response=ACYDBNg49e7Is7qRuBMATPxCozirk5-7xM-mFqv88LRFajcP1EKBPKA-XqhRILoqz3Cmddg";
-      const finderFormURL = "https://docs.google.com/forms/d/1xvf1DHlOZViycdkzQczsnbvKYjKe00oSxy2oo1pep-0/edit";
+    claimBtn.onclick = async () => {
+      claimBtn.innerText = "Processing...";
+      claimBtn.style.pointerEvents = "none";
 
-      // Replace 'entry.123456' with your actual Google Form question ID for Item ID
-      const ownerFieldID = "entry.1535369965";
-      const finderFieldID = "entry.630436873";
+      try {
+        const res = await fetch(API_URL);
+        const data = await res.json();
 
-      // Set button links with pre-filled Item ID
-      document.getElementById("claimBtn").href =
-        ownerFormURL + "?" + ownerFieldID + "=" + encodeURIComponent(itemId);
+        if (data.error) {
+          claimBtn.innerText = "All tags have been claimed";
+          return;
+        }
 
-      document.getElementById("foundBtn").href =
-        finderFormURL + "?" + finderFieldID + "=" + encodeURIComponent(itemId);
-    }
+        window.location.href = data.url;
+      } catch {
+        claimBtn.innerText = "Error. Please try again.";
+        claimBtn.style.pointerEvents = "auto";
+      }
+    };
   </script>
 </body>
 </html>
